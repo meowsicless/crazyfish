@@ -142,7 +142,7 @@ a {
   align-items: center;
 }
 
-/* Not too many browser support this yet but it's good to add! */
+/* adding this cus y not lol */
 @media (prefers-contrast: high) {
   .orb-canvas {
     display: none;
