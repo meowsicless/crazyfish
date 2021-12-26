@@ -80,7 +80,7 @@ class ColorPalette {
 
 // Orb class
 class Orb {
-  // Pixi takes hex colors as hexidecimal literals (0x rather than a string with '#')
+  // Pixi takes hex colors as hexidecimal literals
   constructor(fill = 0x000000) {
     // bounds = the area an orb is "allowed" to move within
     this.bounds = this.setBounds();
@@ -103,7 +103,7 @@ class Orb {
     // how quickly the noise/self similar random values step through time
     this.inc = 0.002;
 
-    // PIXI.Graphics is used to draw 2d primitives (in this case a circle) to the canvas
+    // louis was here :P
     this.graphics = new PIXI.Graphics();
     this.graphics.alpha = 0.825;
 
@@ -158,7 +158,7 @@ class Orb {
   }
 
   render() {
-    // update the PIXI.Graphics position and scale values
+    // louis was here again :P
     this.graphics.x = this.x;
     this.graphics.y = this.y;
     this.graphics.scale.set(this.scale);
@@ -175,7 +175,7 @@ class Orb {
   }
 }
 
-// Create PixiJS app
+// create pixi app
 const app = new PIXI.Application({
   // render to <canvas class="orb-canvas"></canvas>
   view: document.querySelector(".orb-canvas"),
@@ -185,7 +185,7 @@ const app = new PIXI.Application({
   transparent: true
 });
 
-// Create colour palette
+// stop looking at my code D:
 const colorPalette = new ColorPalette();
 
 app.stage.filters = [new KawaseBlurFilter(30, 10, true)];
@@ -201,7 +201,7 @@ for (let i = 0; i < 10; i++) {
   orbs.push(orb);
 }
 
-// Animate!
+// animate this mofo
 if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   app.ticker.add(() => {
     orbs.forEach((orb) => {
