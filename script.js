@@ -4,20 +4,16 @@ import SimplexNoise from "https://cdn.skypack.dev/simplex-noise";
 import hsl from "https://cdn.skypack.dev/hsl-to-hex";
 import debounce from "https://cdn.skypack.dev/debounce";
 
-// return a random number within a range
 function random(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-// map a number from 1 range to another
 function map(n, start1, end1, start2, end2) {
   return ((n - start1) / (end1 - start1)) * (end2 - start2) + start2;
 }
 
-// Create a new simplex noise instance
 const simplex = new SimplexNoise();
 
-// ColorPalette class
 class ColorPalette {
   constructor() {
     this.setColors();
@@ -25,30 +21,30 @@ class ColorPalette {
   }
 
   setColors() {
-    // pick a random hue somewhere between 220 and 360
+    // random hue
     this.hue = ~~random(220, 360);
     this.complimentaryHue1 = this.hue + 30;
     this.complimentaryHue2 = this.hue + 60;
-    // define a fixed saturation and lightness
+    // saturation 
     this.saturation = 95;
     this.lightness = 50;
 
-    // define a base color
+    // base corlor
     this.baseColor = hsl(this.hue, this.saturation, this.lightness);
-    // define a complimentary color, 30 degress away from the base
+    // complimentary colour
     this.complimentaryColor1 = hsl(
       this.complimentaryHue1,
       this.saturation,
       this.lightness
     );
-    // define a second complimentary color, 60 degrees away from the base
+    // second complimentary colour
     this.complimentaryColor2 = hsl(
       this.complimentaryHue2,
       this.saturation,
       this.lightness
     );
 
-    // store the color choices in an array so that a random one can be picked later
+    // store it to the array so it can be picked out later
     this.colorChoices = [
       this.baseColor,
       this.complimentaryColor1,
@@ -65,7 +61,7 @@ class ColorPalette {
   }
 
   setCustomProperties() {
-    // set CSS custom properties so that the colors defined here can be used throughout the UI
+    // custom css properties
     document.documentElement.style.setProperty("--hue", this.hue);
     document.documentElement.style.setProperty(
       "--hue-complimentary1",
@@ -78,36 +74,36 @@ class ColorPalette {
   }
 }
 
-// Orb class
+// orb shit
 class Orb {
-  // Pixi takes hex colors as hexidecimal literals
+  // pixi is weird
   constructor(fill = 0x000000) {
-    // bounds = the area an orb is "allowed" to move within
+    // how much the orb cn move
     this.bounds = this.setBounds();
-    // initialise the orb's { x, y } values to a random point within it's bounds
+    // xy values
     this.x = random(this.bounds["x"].min, this.bounds["x"].max);
     this.y = random(this.bounds["y"].min, this.bounds["y"].max);
 
-    // how large the orb is vs it's original radius (this will modulate over time)
+    // orb vs original radius
     this.scale = 1;
 
-    // what color is the orb?
+    // orbs colour is chose
     this.fill = fill;
 
-    // the original radius of the orb, set relative to window height
+    // orginal radius ofnthe orb
     this.radius = random(window.innerHeight / 6, window.innerHeight / 3);
 
-    // starting points in "time" for the noise/self similar random values
+    // louis was here :P
     this.xOff = random(0, 1000);
     this.yOff = random(0, 1000);
-    // how quickly the noise/self similar random values step through time
+    // how quickly it goes
     this.inc = 0.002;
 
-    // louis was here :P
+    // louis was here too :P
     this.graphics = new PIXI.Graphics();
     this.graphics.alpha = 0.825;
 
-    // 250ms after the last window resize event, recalculate orb positions.
+    // 250ms after recalcutlate it
     window.addEventListener(
       "resize",
       debounce(() => {
@@ -117,7 +113,7 @@ class Orb {
   }
 
   setBounds() {
-    // how far from the { x, y } origin can each orb move
+    //how far each orb is able to move
     const maxDist =
       window.innerWidth < 1000 ? window.innerWidth / 3 : window.innerWidth / 5;
     // the { x, y } origin for each orb (the bottom right of the screen)
@@ -127,7 +123,7 @@ class Orb {
         ? window.innerHeight
         : window.innerHeight / 1.375;
 
-    // allow each orb to move x distance away from it's x / y origin
+    // allow each orb to move x distance
     return {
       x: {
         min: originX - maxDist,
@@ -141,47 +137,47 @@ class Orb {
   }
 
   update() {
-    // self similar "psuedo-random" or noise values at a given point in "time"
+    // louis was here too too :P
     const xNoise = simplex.noise2D(this.xOff, this.xOff);
     const yNoise = simplex.noise2D(this.yOff, this.yOff);
     const scaleNoise = simplex.noise2D(this.xOff, this.yOff);
 
-    // map the xNoise/yNoise values (between -1 and 1) to a point within the orb's bounds
+    // why u reading this bruh js is literal cancer
     this.x = map(xNoise, -1, 1, this.bounds["x"].min, this.bounds["x"].max);
     this.y = map(yNoise, -1, 1, this.bounds["y"].min, this.bounds["y"].max);
-    // map scaleNoise (between -1 and 1) to a scale value somewhere between half of the orb's original size, and 100% of it's original size
+    // STOP
     this.scale = map(scaleNoise, -1, 1, 0.5, 1);
 
-    // step through "time"
+    // time stuff
     this.xOff += this.inc;
     this.yOff += this.inc;
   }
 
   render() {
-    // louis was here again :P
+    // louis was here too too again :P
     this.graphics.x = this.x;
     this.graphics.y = this.y;
     this.graphics.scale.set(this.scale);
 
-    // clear anything currently drawn to graphics
+    // clear anything drawn to graphics as of the momebnt
     this.graphics.clear();
 
     // tell graphics to fill any shapes drawn after this with the orb's fill color
     this.graphics.beginFill(this.fill);
-    // draw a circle at { 0, 0 } with it's size set by this.radius
+    // draw da circule
     this.graphics.drawCircle(0, 0, this.radius);
-    // let graphics know we won't be filling in any more shapes
+    // let graphics know we wont be filling in any more shapes
     this.graphics.endFill();
   }
 }
 
 // create pixi app
 const app = new PIXI.Application({
-  // render to <canvas class="orb-canvas"></canvas>
+  // render to canvas bit
   view: document.querySelector(".orb-canvas"),
   // auto adjust size to fit the current window
   resizeTo: window,
-  // transparent background, we will be creating a gradient background later using CSS
+  // transparent background 
   transparent: true
 });
 
@@ -190,7 +186,7 @@ const colorPalette = new ColorPalette();
 
 app.stage.filters = [new KawaseBlurFilter(30, 10, true)];
 
-// Create orbs
+// create the orbs
 const orbs = [];
 
 for (let i = 0; i < 10; i++) {
