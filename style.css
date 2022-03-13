@@ -1,199 +1,156 @@
-:root {
-  --dark-color: hsl(var(--hue), 100%, 9%);
-  --light-color: hsl(var(--hue), 95%, 98%);
-  --base: hsl(var(--hue), 95%, 50%);
-  --complimentary1: hsl(var(--hue-complimentary1), 95%, 50%);
-  --complimentary2: hsl(var(--hue-complimentary2), 95%, 50%);
-
-  --font-family: "Poppins", system-ui;
-
-  --bg-gradient: linear-gradient(
-    to bottom,
-    hsl(var(--hue), 95%, 99%),
-    hsl(var(--hue), 95%, 84%)
-  );
-}
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;900&display=swap");
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
+body,
 html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	font-family: "Lato", sans-serif;
+	overflow: hidden;
+	user-select: none;
+	cursor: url(cursor.png) 16 16, auto !important;
+	color: white;
+	text-align: center;
 }
 
-body {
-  max-width: 1920px;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 2rem;
-  font-family: var(--font-family);
-  color: var(--dark-color);
-  background: var(--bg-gradient);
+i {
+	cursor: url(cursor.png) 16 16, auto !important;
+}
+i:hover {
+	cursor: url(cursor.png) 16 16, auto !important;
 }
 
-.orb-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: -1;
+.icons i i:hover a a:hover {
+	cursor: url(cursor.png) 16 16, auto !important;
 }
 
-strong {
-  font-weight: 600;
+Main {
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+Main .header {
+	width: auto;
+	display: flex;
+	flex-direction: column;
 }
 
-.overlay {
-  width: 100%;
-  max-width: 1140px;
-  max-height: 640px;
-  padding: 8rem 6rem;
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.375);
-  box-shadow: 0 0.75rem 2rem 0 rgba(0, 0, 0, 0.1);
-  border-radius: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.125);
+Main .header .icons {
+	margin-top: 10px;
+	color: white;
+	font-size: 25px;
 }
 
-.overlay__inner {
-  max-width: 36rem;
+.musicButtons i {
+	margin-top: 30px;
+	font-size: 30px;
+	cursor: pointer;
+	width: max-content;
 }
 
-.overlay__title {
-  font-size: 1.875rem;
-  line-height: 2.75rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  margin-bottom: 2rem;
+Main .header a {
+	text-decoration: none;
+	color: white;
+	margin: 10px 5px;
 }
 
-.text-gradient {
-  background-image: linear-gradient(
-    45deg,
-    var(--base) 25%,
-    var(--complimentary2)
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-background-clip: text;
-  -moz-text-fill-color: transparent;
+Main .header > #name {
+	font-size: 30px;
+	font-weight: bold;
+	text-transform: lowercase;
+	width: max-content;
+	margin: 0 auto;
 }
 
-.overlay__description {
-  font-size: 1rem;
-  line-height: 1.75rem;
-  margin-bottom: 3rem;
+Main .header > #name > p {
+	color: gray;
+	font-size: 16px;
+	display: inline-block;
 }
 
-.overlay__btns {
-  width: 100%;
-  max-width: 30rem;
-  display: flex;
+Main .header .icons i {
+	transition: 200ms;
+	cursor: pointer;
 }
 
-.overlay__btn {
-  width: 50%;
-  height: 2.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--light-color);
-  background: var(--dark-color);
-  border: none;
-  border-radius: 0.5rem;
-  transition: transform 150ms ease;
-  outline-color: hsl(var(--hue), 95%, 50%);
+Main .header .icons i:hover {
+	transform: scale(1.1);
 }
 
-.overlay__btn:hover {
-  transform: scale(1.05);
-  cursor: pointer;
+.background {
+	background: radial-gradient(circle at bottom, rgb(41, 41, 41) 0, black 100%);
+	height: 100vh;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
 }
 
-.overlay__btn--transparent {
-  background: transparent;
-  color: var(--dark-color);
-  border: 2px solid var(--dark-color);
-  border-width: 2px;
-  margin-right: 0.75rem;
+.space {
+	background: rgba(49, 49, 49, 0.1) center / 200px 200px round;
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
 }
 
-.overlay__btn-emoji {
-  margin-left: 0.375rem;
+.stars1 {
+	animation: space 180s ease-in-out infinite;
+	background-image: radial-gradient(1px 1px at 25px 5px, white, rgba(255, 255, 255, 0)), radial-gradient(1px 1px at 50px 25px, white, rgba(255, 255, 255, 0)),
+		radial-gradient(1px 1px at 125px 20px, white, rgba(255, 255, 255, 0)), radial-gradient(1.5px 1.5px at 50px 75px, white, rgba(255, 255, 255, 0)),
+		radial-gradient(2px 2px at 15px 125px, white, rgba(255, 255, 255, 0)), radial-gradient(2.5px 2.5px at 110px 80px, white, rgba(255, 255, 255, 0));
 }
 
-a {
-  text-decoration: none;
-  color: var(--dark-color);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.stars2 {
+	animation: space 240s ease-in-out infinite;
+	background-image: radial-gradient(1px 1px at 75px 125px, white, rgba(255, 255, 255, 0)), radial-gradient(1px 1px at 100px 75px, white, rgba(255, 255, 255, 0)),
+		radial-gradient(1.5px 1.5px at 199px 100px, white, rgba(255, 255, 255, 0)), radial-gradient(2px 2px at 20px 50px, white, rgba(255, 255, 255, 0)),
+		radial-gradient(2.5px 2.5px at 100px 5px, white, rgba(255, 255, 255, 0)), radial-gradient(2.5px 2.5px at 5px 5px, white, rgba(255, 255, 255, 0));
 }
 
-/* adding this cus y not lol */
-@media (prefers-contrast: high) {
-  .orb-canvas {
-    display: none;
-  }
+.stars3 {
+	animation: space 300s ease-in-out infinite;
+	background-image: radial-gradient(1px 1px at 10px 10px, white, rgba(255, 255, 255, 0)), radial-gradient(1px 1px at 150px 150px, white, rgba(255, 255, 255, 0)),
+		radial-gradient(1.5px 1.5px at 60px 170px, white, rgba(255, 255, 255, 0)), radial-gradient(1.5px 1.5px at 175px 180px, white, rgba(255, 255, 255, 0)),
+		radial-gradient(2px 2px at 195px 95px, white, rgba(255, 255, 255, 0)), radial-gradient(2.5px 2.5px at 95px 145px, white, rgba(255, 255, 255, 0));
 }
 
-@media only screen and (max-width: 1140px) {
-  .overlay {
-    padding: 8rem 4rem;
-  }
+@keyframes space {
+	40% {
+		opacity: 0.75;
+	}
+	50% {
+		opacity: 0.25;
+	}
+	60% {
+		opacity: 0.75;
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
-@media only screen and (max-width: 840px) {
-  body {
-    padding: 1.5rem;
-  }
-
-  .overlay {
-    padding: 4rem;
-    height: auto;
-  }
-
-  .overlay__title {
-    font-size: 1.25rem;
-    line-height: 2rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .overlay__description {
-    font-size: 0.875rem;
-    line-height: 1.5rem;
-    margin-bottom: 2.5rem;
-  }
+.discordProfile {
+	margin: 10px 0;
+	height: 90px;
+	border-radius: 16px;
+	overflow: hidden;
+	width: max-content;
+	margin: 0 auto;
+	transition: 300ms ease-in-out;
 }
 
-@media only screen and (max-width: 600px) {
-  .overlay {
-    padding: 1.5rem;
-  }
+.discordProfile:hover {
+	height: 210px;
+}
 
-  .overlay__btns {
-    flex-wrap: wrap;
-  }
-
-  .overlay__btn {
-    width: 100%;
-    font-size: 0.75rem;
-    margin-right: 0;
-  }
-
-  .overlay__btn:first-child {
-    margin-bottom: 1rem;
-  }
+main .header .emojis {
+	margin-top: 10px;
 }
