@@ -2,7 +2,7 @@ document.addEventListener("contextmenu", (event) => event.preventDefault());
 
 var started = false;
 
-var audio = new Audio("songs/pusher.mp3");
+var audio = new Audio("pusher.mp3");
 function play() {
 	started = !started;
 	if (started) {
