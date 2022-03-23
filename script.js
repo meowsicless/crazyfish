@@ -6,7 +6,7 @@ var audio = new Audio("help_urself.mp3");
 function play() {
 	started = !started;
 	if (started) {
-		audio.volume = 3;
+		audio.volume = 0.9;
 		audio.play();
 		document.getElementById("playbutton").style.display = "none";
 		document.getElementById("pausebutton").style.display = "block";
