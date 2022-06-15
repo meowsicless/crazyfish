@@ -1,18 +1,18 @@
-$(function() {
-    var url = 'cometogether.mp3';
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    var context = new AudioContext();
-    var source = context.createBufferSource();
-    source.connect(context.destination);
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true); 
-    request.responseType = 'arraybuffer';
-    request.onload = function() {
-        context.decodeAudioData(request.response, function(response) {
-            source.buffer = response;
-            source.start(0);
-            source.loop = true;
-        }, function () { console.error('The request failed.'); } );
-    }
-    request.send();
-});
+document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+var started = false;
+
+var audio = new Audio("cometogether.mp3");
+function play() {
+	started = !started;
+	if (started) {
+		audio.volume = 0.9;
+		audio.play();
+		document.getElementById("playbutton").style.display = "none";
+		document.getElementById("pausebutton").style.display = "block";
+	} else {
+		audio.pause();
+		document.getElementById("playbutton").style.display = "block";
+		document.getElementById("pausebutton").style.display = "none";
+	}
+}
