@@ -2,7 +2,7 @@ document.addEventListener("contextmenu", (event) => event.preventDefault());
 
 var started = false;
 
-var audio = new Audio("cometogether.mp3");
+var audio = new Audio("shadowlady.mp3");
 function play() {
 	started = !started;
 	if (started) {
